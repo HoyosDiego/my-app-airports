@@ -52,10 +52,8 @@ function App() {
   }
 
   function handleChange(e: any, op: number) {
-    console.log("Fruit Selected!! ", e);
+    setShowMmap(true);
     op === 1 ? setCoords1(e) : setCoords2(e)
-    console.log(' que inserto 1', coords1)
-    console.log(' que inserto 2', coords2)
 
   }
 
