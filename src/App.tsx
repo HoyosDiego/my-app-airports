@@ -13,6 +13,9 @@ function App() {
   const [showMap, setShowMmap] = useState(false)
   const [options1, setOption1] = useState(options);
   const [options2, setOption2] = useState(options);
+  const [coords1, setCoords1] = useState<any>();
+  const [coords2, setCoords2] = useState<any>();
+  const [millasNauticas, setMilalsNauticas] = useState<any>();
 
   useLayoutEffect(() => {
     console.log('entra en layout ', locations)
@@ -42,14 +45,18 @@ function App() {
 
     const Kilometers = R * c;
     const valueMilla = 0.539957;
-    console.log('kilometers  ', Kilometers.toFixed(2))
-    console.log('Milla Nautica   ', Kilometers * valueMilla)
+    const MillaNautica = Kilometers * valueMilla;
+    setMilalsNauticas(MillaNautica.toFixed(0))
 
     return Kilometers * valueMilla; // in metres
   }
 
-  function handleChange(e: any) {
+  function handleChange(e: any, op: number) {
     console.log("Fruit Selected!! ", e);
+    op === 1 ? setCoords1(e) : setCoords2(e)
+    console.log(' que inserto 1', coords1)
+    console.log(' que inserto 2', coords2)
+
   }
 
   return (
@@ -60,22 +67,23 @@ function App() {
       </div>)}
       <div className='distance' col-2>
         <button onClick={() => !showMap ? setShowMmap(true) : setShowMmap(false)}>{!showMap ? "Show Map" : "Hide Map"}</button>
-        <button onClick={() => haversine({ lat: 3.4516467, lon: -76.5319854 }, { lat: 3.2612939, lon: -76.5506502 })}>Distancia</button>
         <div className="select-container">
           <Select
             options={options1}
             onChange={(v1) => {
-              handleChange(v1)
+              handleChange(v1, 1)
             }}
           />
           <div style={{ height: 30 }} />
           <Select
             options={options2}
             onChange={(v2, a) => {
-              handleChange(v2)
+              handleChange(v2, 2)
             }}
           />
         </div>
+        <button onClick={() => haversine({ lat: coords1.lat, lon: coords1.lng }, { lat: coords2.lat, lon: coords2.lng })}>Distancia</button>
+        {millasNauticas && (<div>La distancia entre {coords1.label} Y {coords2.label} son {millasNauticas} Millas Nauticas</div>)}
       </div>
 
     </div>
