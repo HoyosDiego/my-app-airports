@@ -4,6 +4,10 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+import mapboxgl from 'mapbox-gl'; // or "const mapboxgl = require('mapbox-gl');"
+
+mapboxgl.accessToken = 'pk.eyJ1IjoiaG95b3NkIiwiYSI6ImNsNzFlMXVlczBuZXM0MW4xMWhlZDBoN3QifQ.dIUV5kH5-cS6-p3mtVI26Q';
+
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
