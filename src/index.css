@@ -19,12 +19,41 @@ code {
   margin-left: 2rem;
 }
 
+.distanceBtn{
+  margin: auto;
+  background-color: rgb(127, 165, 255);
+  width: 30%;
+  text-align: center;
+  align-items: center;
+  align-content: center;
+  align-self: center;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  padding: 0.6rem;
+  border-radius: 1rem;
+  
+}
+
 .container {
-  width: 98%;
-  height: 100vw;
+  width: 96%;
+  height: 60vw;
   position: relative;
   columns: 2 auto;
   display: flex;
+  margin:  1rem 1rem 1rem 1rem;
+}
+
+.showMapContainer{
+  margin: auto;
+  background-color: aquamarine;
+  width: 30%;
+  text-align: center;
+  align-items: center;
+  align-content: center;
+  align-self: center;
+  margin-bottom: 1rem;
+  padding: 0.6rem;
+  border-radius: 1rem;
 }
 
 .map {

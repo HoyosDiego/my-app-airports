@@ -1,33 +1,42 @@
-import { Map } from 'mapbox-gl';
+import { Map, Marker } from 'mapbox-gl';
 import React, { useLayoutEffect, useRef, useState } from 'react';
 import './App.css';
-import locations from './locations.json';
 import Select from "react-select";
-import { dogOptions } from "./data";
+import { useGetAirport } from './hooks/useGetAirport';
 
-const options = dogOptions;
+
+let c1 = -76.5506502
+let c2 = 3.2612939
 
 function App() {
-
+  const { airportList } = useGetAirport();
   const mapDiv = useRef<HTMLDivElement>(null);
-  const [showMap, setShowMmap] = useState(false)
-  const [options1, setOption1] = useState(options);
-  const [options2, setOption2] = useState(options);
   const [coords1, setCoords1] = useState<any>();
   const [coords2, setCoords2] = useState<any>();
   const [millasNauticas, setMilalsNauticas] = useState<any>();
+  const [showMap, setShowMmap] = useState(false)
 
   useLayoutEffect(() => {
-    console.log('entra en layout ', locations)
+    if (coords1) {
+      c1 = coords1.longitude
+      c2 = coords1.latitude
+    }
     if (showMap) {
       const map = new Map({
         container: mapDiv.current!, // container ID
         style: 'mapbox://styles/mapbox/streets-v11', // style URL
-        center: [-76.5506502, 3.2612939], // starting position [lng, lat]
-        zoom: 14, // starting zoom
+        center: [c1, c2], // starting position [lng, lat]
+        zoom: 10, // starting zoom
       });
+
+      new Marker({
+        color: '#61DAFB'
+      })
+        .setLngLat(map.getCenter())
+        .addTo(map)
     }
-  }, [showMap])
+
+  }, [showMap, coords1])
 
 
 
@@ -48,7 +57,7 @@ function App() {
     const MillaNautica = Kilometers * valueMilla;
     setMilalsNauticas(MillaNautica.toFixed(0))
 
-    return Kilometers * valueMilla; // in metres
+    return Kilometers * valueMilla; // in miles
   }
 
   function handleChange(e: any, op: number) {
@@ -61,27 +70,37 @@ function App() {
     <div className='container'
     >
       {showMap && (<div ref={mapDiv}
-        className='map' col-10>
+        className='map'>
       </div>)}
-      <div className='distance' col-2>
-        <button onClick={() => !showMap ? setShowMmap(true) : setShowMmap(false)}>{!showMap ? "Show Map" : "Hide Map"}</button>
-        <div className="select-container">
+      <div className='distance'>
+        <div className='showMapContainer' onClick={() => !showMap ? setShowMmap(true) : setShowMmap(false)}>{!showMap ? "Show Map" : "Hide Map"}</div>
+        {airportList ? <div className="select-container">
           <Select
-            options={options1}
+            options={airportList}
             onChange={(v1) => {
               handleChange(v1, 1)
             }}
+            getOptionLabel={(option) => `${option.name} `}
+            getOptionValue={(option) => `${option.name} - ${option.iata}`}
           />
           <div style={{ height: 30 }} />
           <Select
-            options={options2}
+            isSearchable={true}
+            options={airportList}
             onChange={(v2, a) => {
               handleChange(v2, 2)
             }}
+            getOptionLabel={(option) => `${option.name} `}
+            getOptionValue={(option) => `${option.name} - ${option.iata}`}
           />
         </div>
-        <button onClick={() => haversine({ lat: coords1.lat, lon: coords1.lng }, { lat: coords2.lat, lon: coords2.lng })}>Distancia</button>
-        {millasNauticas && (<div>La distancia entre {coords1.label} Y {coords2.label} son {millasNauticas} Millas Nauticas</div>)}
+          : <div>
+            <h1>Loading</h1>
+          </div>
+        }
+        <div className='distanceBtn' onClick={() => haversine({ lat: coords1.latitude, lon: coords1.longitude }, { lat: coords2.latitude, lon: coords2.longitude })}>Distance</div>
+        {millasNauticas && (<div>The distance between {coords1.label} and {coords2.label} is {millasNauticas} nautical miles</div>)}
+
       </div>
 
     </div>
